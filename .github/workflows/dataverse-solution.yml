@@ -37,7 +37,6 @@ jobs:
       - name: Export Solution from Dev
         run: |
           pac solution export \
-            --environment "$DATAVERSE_URL" \
             --name "Permit Management" \
             --path exported_solution.zip
 
@@ -86,7 +85,6 @@ jobs:
       - name: Import Solution into Test
         run: |
           pac solution import \
-            --environment "$DATAVERSE_URL" \
             --path exported_solution.zip \
             --force-overwrite \
             --publish-workflows
