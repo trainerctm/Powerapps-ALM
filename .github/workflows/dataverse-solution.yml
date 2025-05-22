@@ -31,7 +31,8 @@ jobs:
             --applicationId "$CLIENT_ID" \
             --clientSecret "$CLIENT_SECRET" \
             --tenant "$TENANT_ID" \
-            --environment "$DATAVERSE_URL"
+            --environment "$DATAVERSE_URL" \
+            --accept-cleartext-caching   # allow caching in cleartext on Linux runners
 
       - name: Export Solution from Dev
         run: |
@@ -79,7 +80,8 @@ jobs:
             --applicationId "$CLIENT_ID" \
             --clientSecret "$CLIENT_SECRET" \
             --tenant "$TENANT_ID" \
-            --environment "$DATAVERSE_URL"
+            --environment "$DATAVERSE_URL" \
+            --accept-cleartext-caching
 
       - name: Import Solution into Test
         run: |
