@@ -16,7 +16,7 @@ jobs:
       - name: Install Power Platform CLI
         run: |
           npm install -g @microsoft/powerplatform-cli
-          pac --version  # Verify installation
+          pac --version
 
       - name: Authenticate with Dataverse (Dev)
         env:
@@ -32,7 +32,7 @@ jobs:
           pac solution export --name "Permit Management" --path exported_solution.zip --environment "$DATAVERSE_URL"
 
       - name: Upload Solution Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: exported-solution
           path: exported_solution.zip
@@ -48,14 +48,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download Solution Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: exported-solution
 
       - name: Install Power Platform CLI
         run: |
           npm install -g @microsoft/powerplatform-cli
-          pac --version  # Verify installation
+          pac --version
 
       - name: Authenticate with Dataverse (Test)
         env:
