@@ -15,9 +15,8 @@ jobs:
       
       - name: Install Power Platform CLI
         run: |
-          wget https://aka.ms/pac-linux-install -O pac-install.sh
-          chmod +x pac-install.sh
-          ./pac-install.sh
+          dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
           pac --version
 
       - name: Authenticate with Dataverse (Dev)
@@ -27,11 +26,17 @@ jobs:
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_DEV_URL }}
         run: |
-          pac auth create --client-id "$CLIENT_ID" --tenant "$TENANT_ID" --client-secret "$CLIENT_SECRET" --url "$DATAVERSE_URL"
+          pac auth create --client-id "$CLIENT_ID" \
+                          --tenant "$TENANT_ID" \
+                          --client-secret "$CLIENT_SECRET" \
+                          --url "$DATAVERSE_URL"
 
       - name: Export Solution from Dev
         run: |
-          pac solution export --name "Permit Management" --path exported_solution.zip --environment "$DATAVERSE_URL"
+          pac solution export \
+            --name "Permit Management" \
+            --path exported_solution.zip \
+            --environment "$DATAVERSE_URL"
 
       - name: Upload Solution Artifact
         uses: actions/upload-artifact@v4
@@ -56,9 +61,8 @@ jobs:
 
       - name: Install Power Platform CLI
         run: |
-          wget https://aka.ms/pac-linux-install -O pac-install.sh
-          chmod +x pac-install.sh
-          ./pac-install.sh
+          dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
           pac --version
 
       - name: Authenticate with Dataverse (Test)
@@ -68,11 +72,18 @@ jobs:
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_TEST_URL }}
         run: |
-          pac auth create --client-id "$CLIENT_ID" --tenant "$TENANT_ID" --client-secret "$CLIENT_SECRET" --url "$DATAVERSE_URL"
+          pac auth create --client-id "$CLIENT_ID" \
+                          --tenant "$TENANT_ID" \
+                          --client-secret "$CLIENT_SECRET" \
+                          --url "$DATAVERSE_URL"
 
       - name: Import Solution into Test
         run: |
-          pac solution import --path exported_solution.zip --environment "$DATAVERSE_URL" --force-overwrite --publish-workflows
+          pac solution import \
+            --path exported_solution.zip \
+            --environment "$DATAVERSE_URL" \
+            --force-overwrite \
+            --publish-workflows
 
       - name: Clear Auth Profile (Test)
         run: pac auth clear
