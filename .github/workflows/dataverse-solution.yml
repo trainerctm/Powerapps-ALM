@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-      
+
       - name: Install Power Platform CLI
         run: |
           dotnet tool install --global Microsoft.PowerApps.CLI.Tool
@@ -26,10 +26,12 @@ jobs:
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_DEV_URL }}
         run: |
-          pac auth create --client-id "$CLIENT_ID" \
-                          --tenant "$TENANT_ID" \
-                          --client-secret "$CLIENT_SECRET" \
-                          --url "$DATAVERSE_URL"
+          pac auth create \
+            --name DevProfile \
+            --applicationId "$CLIENT_ID" \
+            --clientSecret "$CLIENT_SECRET" \
+            --tenant "$TENANT_ID" \
+            --environment "$DATAVERSE_URL"
 
       - name: Export Solution from Dev
         run: |
@@ -72,10 +74,12 @@ jobs:
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_TEST_URL }}
         run: |
-          pac auth create --client-id "$CLIENT_ID" \
-                          --tenant "$TENANT_ID" \
-                          --client-secret "$CLIENT_SECRET" \
-                          --url "$DATAVERSE_URL"
+          pac auth create \
+            --name TestProfile \
+            --applicationId "$CLIENT_ID" \
+            --clientSecret "$CLIENT_SECRET" \
+            --tenant "$TENANT_ID" \
+            --environment "$DATAVERSE_URL"
 
       - name: Import Solution into Test
         run: |
