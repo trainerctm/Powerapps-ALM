@@ -16,8 +16,9 @@ jobs:
       - name: Install Power Platform CLI
         run: |
           npm install -g @microsoft/powerplatform-cli
+          pac --version  # Verify installation
 
-      - name: Authenticate with Dataverse
+      - name: Authenticate with Dataverse (Dev)
         env:
           CLIENT_ID: ${{ secrets.DATAVERSE_CLIENT_ID }}
           TENANT_ID: ${{ secrets.DATAVERSE_TENANT_ID }}
@@ -36,6 +37,9 @@ jobs:
           name: exported-solution
           path: exported_solution.zip
 
+      - name: Clear Auth Profile (Dev)
+        run: pac auth clear
+
   import-solution:
     needs: export-solution
     runs-on: ubuntu-latest
@@ -51,8 +55,9 @@ jobs:
       - name: Install Power Platform CLI
         run: |
           npm install -g @microsoft/powerplatform-cli
+          pac --version  # Verify installation
 
-      - name: Authenticate with Dataverse (Test Environment)
+      - name: Authenticate with Dataverse (Test)
         env:
           CLIENT_ID: ${{ secrets.DATAVERSE_CLIENT_ID }}
           TENANT_ID: ${{ secrets.DATAVERSE_TENANT_ID }}
@@ -63,4 +68,7 @@ jobs:
 
       - name: Import Solution into Test
         run: |
-          pac solution import --path exported_solution.zip --environment "$DATAVERSE_URL"
+          pac solution import --path exported_solution.zip --environment "$DATAVERSE_URL" --force-overwrite --publish-workflows
+
+      - name: Clear Auth Profile (Test)
+        run: pac auth clear
