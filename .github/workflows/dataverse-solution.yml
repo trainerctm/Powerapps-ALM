@@ -21,8 +21,8 @@ jobs:
 
       - name: Authenticate with Dataverse (Dev)
         env:
-          CLIENT_ID: ${{ secrets.DATAVERSE_CLIENT_ID }}
-          TENANT_ID: ${{ secrets.DATAVERSE_TENANT_ID }}
+          CLIENT_ID:     ${{ secrets.DATAVERSE_CLIENT_ID }}
+          TENANT_ID:     ${{ secrets.DATAVERSE_TENANT_ID }}
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_DEV_URL }}
         run: |
@@ -32,14 +32,14 @@ jobs:
             --clientSecret "$CLIENT_SECRET" \
             --tenant "$TENANT_ID" \
             --environment "$DATAVERSE_URL" \
-            --accept-cleartext-caching   # allow caching in cleartext on Linux runners
+            --accept-cleartext-caching
 
       - name: Export Solution from Dev
         run: |
           pac solution export \
+            --environment "$DATAVERSE_URL" \
             --name "Permit Management" \
-            --path exported_solution.zip \
-            --environment "$DATAVERSE_URL"
+            --path exported_solution.zip
 
       - name: Upload Solution Artifact
         uses: actions/upload-artifact@v4
@@ -70,8 +70,8 @@ jobs:
 
       - name: Authenticate with Dataverse (Test)
         env:
-          CLIENT_ID: ${{ secrets.DATAVERSE_CLIENT_ID }}
-          TENANT_ID: ${{ secrets.DATAVERSE_TENANT_ID }}
+          CLIENT_ID:     ${{ secrets.DATAVERSE_CLIENT_ID }}
+          TENANT_ID:     ${{ secrets.DATAVERSE_TENANT_ID }}
           CLIENT_SECRET: ${{ secrets.DATAVERSE_CLIENT_SECRET }}
           DATAVERSE_URL: ${{ secrets.DATAVERSE_TEST_URL }}
         run: |
@@ -86,8 +86,8 @@ jobs:
       - name: Import Solution into Test
         run: |
           pac solution import \
-            --path exported_solution.zip \
             --environment "$DATAVERSE_URL" \
+            --path exported_solution.zip \
             --force-overwrite \
             --publish-workflows
 
