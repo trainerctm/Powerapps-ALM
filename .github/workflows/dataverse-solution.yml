@@ -9,6 +9,8 @@ on:
 jobs:
   export-solution:
     runs-on: ubuntu-latest
+    env:
+      SOLUTION_UNIQUE_NAME: ${{ secrets.SOLUTION_UNIQUE_NAME }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -17,7 +19,6 @@ jobs:
         run: |
           dotnet tool install --global Microsoft.PowerApps.CLI.Tool
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-          pac help
 
       - name: Authenticate with Dataverse (Dev)
         env:
@@ -37,7 +38,7 @@ jobs:
       - name: Export Solution from Dev
         run: |
           pac solution export \
-            --name "PermitManagement" \
+            --name "$SOLUTION_UNIQUE_NAME" \
             --path exported_solution.zip
 
       - name: Upload Solution Artifact
@@ -65,7 +66,6 @@ jobs:
         run: |
           dotnet tool install --global Microsoft.PowerApps.CLI.Tool
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-          pac help
 
       - name: Authenticate with Dataverse (Test)
         env:
@@ -87,7 +87,8 @@ jobs:
           pac solution import \
             --path exported_solution.zip \
             --force-overwrite \
-            --publish-workflows
+            --activate-plugins \
+            --publish-changes
 
       - name: Clear Auth Profile (Test)
         run: pac auth clear
