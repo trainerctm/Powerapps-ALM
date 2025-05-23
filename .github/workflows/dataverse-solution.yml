@@ -37,7 +37,7 @@ jobs:
       - name: Export Solution from Dev
         run: |
           pac solution export \
-            --name "Permit Management" \
+            --name "PermitManagement" \
             --path exported_solution.zip
 
       - name: Upload Solution Artifact
